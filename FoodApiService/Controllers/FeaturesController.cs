@@ -50,7 +50,7 @@ namespace FoodApiService.Controllers
 
         }
 
-        [HttpGet("FeatureId")]
+        [HttpGet("{id}")]
         public IActionResult GetByIdFeature(int featureId)
         {
             var feature = _context.Features.FirstOrDefault(x => x.FeatureId == featureId);

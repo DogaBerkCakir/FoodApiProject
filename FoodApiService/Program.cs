@@ -1,5 +1,9 @@
+using System.Reflection;
+using FluentValidation;
 using FoodApiService.Context;
+using FoodApiService.Entities;
 using FoodApiService.Mapping;
+using FoodApiService.ValidationRules;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +13,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddAutoMapper(typeof(GeneralMapping));
-
-
+builder.Services.AddScoped<IValidator<Product>, ProductValidator>(); // dependency injection iþlemi yapýyoruz validasyonlarý
+//builder.Services.AddAutoMapper(typeof(GeneralMapping)); bunuda yazsan olur ama arasýndaki farklarý arastýrabilirsin......
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

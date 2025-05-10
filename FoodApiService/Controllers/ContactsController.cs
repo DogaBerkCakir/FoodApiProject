@@ -59,7 +59,7 @@ namespace FoodApiService.Controllers
             return Ok("Silme işlemi başarılı");
         }
 
-        [HttpGet("GetContactId")]
+        [HttpGet("{id}")]
         public IActionResult GetContact(int ContactId)
         {
             var contact = _context.Contacts.Find(ContactId);
