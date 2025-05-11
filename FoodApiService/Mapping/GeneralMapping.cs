@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FoodApiService.Dtos.FeatureDtos;
 using FoodApiService.Dtos.MessageDtos;
+using FoodApiService.Dtos.ProductDtos;
 using FoodApiService.Entities;
 
 namespace FoodApiService.Mapping
@@ -19,6 +20,7 @@ namespace FoodApiService.Mapping
             CreateMap<Message , CreateMessageDto>().ReverseMap(); // tam tersi de maplensin yazmamıza gerek kalmadı tekrar
             CreateMap<Message , UpdateMessageDto>().ReverseMap(); // tam tersi de maplensin yazmamıza gerek kalmadı tekrar
 
+            CreateMap<Product, CreateProductDto>().ReverseMap(); // tam tersi de maplensin yazmamıza gerek kalmadı tekrar
 
         }
     }

@@ -7,5 +7,7 @@
         public string ProductDescription { get; set; }
         public decimal Price { get; set; }
         public string ImageUrl { get; set; }
+        public int? CategoryId { get; set; } //kategorisiz urun olabilir?
+        public Category Category { get; set; } // navigation property
     }
 }
