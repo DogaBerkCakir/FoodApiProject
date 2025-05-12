@@ -3,8 +3,10 @@ using FluentValidation;
 using FoodApiService.Context;
 using FoodApiService.Dtos.ProductDtos;
 using FoodApiService.Entities;
+using FoodApiService.ValidationRules;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodApiService.Controllers
 {
@@ -15,11 +17,13 @@ namespace FoodApiService.Controllers
         private readonly ApiContext _context;
         private readonly IValidator<Product> _productValidator;
         private readonly IMapper _mapper;
-        public ProductsController(ApiContext context, IValidator<Product> productValidator, IMapper mapper)
+        private readonly IValidator<CreateByIdProductDto> _createByIdProductDtoValidator;  
+        public ProductsController(ApiContext context, IValidator<Product> productValidator, IMapper mapper , IValidator<CreateByIdProductDto> createByIdProductValidator)
         {
             _context = context;
             _productValidator = productValidator;
             _mapper = mapper;
+            _createByIdProductDtoValidator = createByIdProductValidator;
         }
 
         [HttpGet]
@@ -45,23 +49,22 @@ namespace FoodApiService.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateProduct(Product product)
+        public IActionResult CreateProduct(CreateByIdProductDto createByIdProductDto)
         {
-            var validationResult = _productValidator.Validate(product);
-            // bu şu anlama geliyor ->  sana gonderdigim nesneyi kontrol et 
-
-            if(!validationResult.IsValid)
+            var validationResult = _createByIdProductDtoValidator.Validate(createByIdProductDto);
+            if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
             }
             else 
-            { 
+            {
+                var product = _mapper.Map<Product>(createByIdProductDto);
+
                 _context.Products.Add(product);
                 _context.SaveChanges();
+                return Ok(new { message = "Ürün ekleme işlemi başarılı..", data = product }); // bu kullanım iyiymiş
+
             }
-
-            return Ok(new {message = "Ürün ekleme işlemi başarılı.." , data= product}); // bu kullanım iyiymiş
-
         }
 
         [HttpDelete]
@@ -95,7 +98,7 @@ namespace FoodApiService.Controllers
         }
 
         [HttpPost("CategoryId")]
-        public IActionResult PostProduct(CreateProductDto createProductDto) 
+        public IActionResult PostProduct(CreateByIdProductDto createProductDto) 
         {
             var product = _mapper.Map<Product>(createProductDto);
             _context.Add(product);
@@ -104,6 +107,21 @@ namespace FoodApiService.Controllers
             return Ok(new { message = "Ürün ekleme işlemi başarılı..", data = product }); // bu kullanım iyiymiş
         }
 
+
+        //2 tablo arasındaki berabaer baglantları getir!!!!!!! joinleme veya dto olur mu?
+        [HttpGet("ProductListWithCategory")]
+        public IActionResult ProductListWithCategory()
+        {
+            var products = _context.Products.Include(x => x.Category).ToList();
+            if (products == null || !products.Any())
+            {
+                return NotFound();
+            }
+
+            // AutoMapper ile dönüşüm
+            var result = _mapper.Map<List<ResultProductWithCategoryDto>>(products);
+            return Ok(result);
+        }
 
 
 

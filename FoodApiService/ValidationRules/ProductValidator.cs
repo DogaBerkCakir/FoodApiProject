@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FoodApiService.Dtos.ProductDtos;
 using FoodApiService.Entities;
 
 namespace FoodApiService.ValidationRules
@@ -17,5 +18,7 @@ namespace FoodApiService.ValidationRules
             
             RuleFor(x => x.ProductDescription).NotEmpty().WithMessage("Urun Aciklamasi Bos Olamaz...");
         }
+
+
     }
 }

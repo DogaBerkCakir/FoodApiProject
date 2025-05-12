@@ -1,6 +1,7 @@
 using System.Reflection;
 using FluentValidation;
 using FoodApiService.Context;
+using FoodApiService.Dtos.ProductDtos;
 using FoodApiService.Entities;
 using FoodApiService.Mapping;
 using FoodApiService.ValidationRules;
@@ -14,6 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IValidator<Product>, ProductValidator>(); // dependency injection iþlemi yapýyoruz validasyonlarý
+builder.Services.AddScoped<IValidator<CreateByIdProductDto>, CreateByIdProductDtoValidator>(); // dependency injection iþlemi yapýyoruz validasyonlarý
 //builder.Services.AddAutoMapper(typeof(GeneralMapping)); bunuda yazsan olur ama arasýndaki farklarý arastýrabilirsin......
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 var app = builder.Build();
