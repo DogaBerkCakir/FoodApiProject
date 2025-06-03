@@ -1,4 +1,6 @@
-﻿using FoodApiService.Context;
+﻿using AutoMapper;
+using FoodApiService.Context;
+using FoodApiService.Dtos.CategoryDtos;
 using FoodApiService.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +12,12 @@ namespace FoodApiService.Controllers
     public class CategoriesController : ControllerBase
     {
         private readonly ApiContext _context;
+        private readonly IMapper _mapper;
 
-        public CategoriesController(ApiContext context)
+        public CategoriesController(ApiContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -35,10 +39,16 @@ namespace FoodApiService.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreateCategory(Category category)
+        public IActionResult CreateCategory(CreateCategoryDto dto)
         {
-            _context.Categories.Add(category);
+            var result = _mapper.Map<Category>(dto);
+            if (result == null)
+            {
+                return BadRequest("Kategori oluşturulamadı.");
+            }
+            _context.Categories.Add(result);
             _context.SaveChanges();
+
             return Ok("Kategori başarıyla eklendi.");
         }
 
@@ -57,8 +67,14 @@ namespace FoodApiService.Controllers
         }
 
         [HttpPut]
-        public IActionResult UpdateCategory(Category category)
+        public IActionResult UpdateCategory(UpdateCategoryDto dto)
         {
+            var category = _context.Categories.Find(dto.Id);
+            if (category == null)
+            {
+                return NotFound("Kategori bulunamadı.");
+            }
+            category.CategoryName = dto.CategoryName;
             _context.Categories.Update(category);
             _context.SaveChanges();
             return Ok("Kategori başarıyla güncellendi.");

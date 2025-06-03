@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FoodApiService.Dtos.CategoryDtos;
 using FoodApiService.Dtos.FeatureDtos;
 using FoodApiService.Dtos.MessageDtos;
 using FoodApiService.Dtos.ProductDtos;
@@ -23,7 +24,8 @@ namespace FoodApiService.Mapping
             CreateMap<Product, CreateByIdProductDto>().ReverseMap(); // tam tersi de maplensin yazmamıza gerek kalmadı tekrar
             CreateMap<Product, ResultProductWithCategoryDto>().ForMember(x => x.CategoryName, y => y.MapFrom(z => z.Category.CategoryName)).ReverseMap();
             // forMember metodu önemli !  üyeler için demek ordan onu cek gibi seklinde dusun
-        
+            CreateMap<Category,CreateCategoryDto>().ReverseMap(); // tam tersi de maplensin yazmamıza gerek kalmadı tekrar
+
         }
     }
 }
